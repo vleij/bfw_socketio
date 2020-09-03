@@ -1,0 +1,22 @@
+2020-09-02 11:19:54 pid:1 ArgumentCountError: Too few arguments to function socketio\{closure}(), 2 passed in D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Connection\TcpConnection.php on line 660 and exactly 3 expected in D:\phpstudy_pro\WWW\socketio\Dome1.php:35
+Stack trace:
+#0 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Connection\TcpConnection.php(660): socketio\{closure}(Object(Workerman\Connection\TcpConnection), Object(Workerman\Protocols\Http\Request))
+#1 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Events\Select.php(293): Workerman\Connection\TcpConnection->baseRead(Resource id #28)
+#2 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Worker.php(2412): Workerman\Events\Select->loop()
+#3 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Worker.php(1400): Workerman\Worker->run()
+#4 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Worker.php(1343): Workerman\Worker::forkWorkersForWindows()
+#5 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Worker.php(542): Workerman\Worker::forkWorkers()
+#6 D:\phpstudy_pro\WWW\socketio\Dome1.php(55): Workerman\Worker::runAll()
+#7 {main}
+2020-09-02 11:19:54 pid:1 Worker process terminated
+2020-09-02 11:22:48 pid:1 ArgumentCountError: Too few arguments to function socketio\{closure}(), 2 passed in D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Connection\TcpConnection.php on line 660 and exactly 3 expected in D:\phpstudy_pro\WWW\socketio\Dome1.php:36
+Stack trace:
+#0 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Connection\TcpConnection.php(660): socketio\{closure}(Object(Workerman\Connection\TcpConnection), Object(Workerman\Protocols\Http\Request))
+#1 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Events\Select.php(293): Workerman\Connection\TcpConnection->baseRead(Resource id #28)
+#2 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Worker.php(2412): Workerman\Events\Select->loop()
+#3 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Worker.php(1400): Workerman\Worker->run()
+#4 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Worker.php(1343): Workerman\Worker::forkWorkersForWindows()
+#5 D:\phpstudy_pro\WWW\socketio\vendor\workerman\workerman\Worker.php(542): Workerman\Worker::forkWorkers()
+#6 D:\phpstudy_pro\WWW\socketio\Dome1.php(56): Workerman\Worker::runAll()
+#7 {main}
+2020-09-02 11:22:48 pid:1 Worker process terminated
