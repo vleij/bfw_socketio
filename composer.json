@@ -2,10 +2,11 @@
     "name": "bfw/socketio",
     "description": "一个socketio推送库",
     "type": "library",
-    "version":"1.0",
+    "version":"1.0.0",
     "require": {
         "php" : ">=5.3.0",
-        "workerman/phpsocket.io": "^1.1"
+        "workerman/phpsocket.io": "^1.1",
+        "bfw/socketio": "1.0.*@dev"
     },
     "license": "MIT",
     "homepage": "https://github.com/vleij/bfw_socketio.git",
