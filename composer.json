@@ -1,5 +1,5 @@
 {
-    "name": "bfw/socketio",
+    "name": "socketio/datapush",
     "description": "一个socketio推送库",
     "type": "library",
     "require": {
