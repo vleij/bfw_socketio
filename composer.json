@@ -3,7 +3,7 @@
     "description": "一个socketio推送库",
     "type": "library",
     "require": {
-        "bfw/socketio": "1.0.*@dev"
+        "bfw/socketio": "dev-master"
     },
     "license": "MIT",
     "homepage": "https://github.com/vleij/bfw_socketio.git",
@@ -12,6 +12,5 @@
             "name": "leijia",
             "email": "584839656@qq.com"
         }
-    ],
-    "minimum-stability": "RC"
+    ]
 }
