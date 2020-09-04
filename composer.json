@@ -5,7 +5,7 @@
     "require": {
         "php" : ">=5.3.0",
         "workerman/phpsocket.io": "^1.1",
-        "socketio/datapush": "1.0.*@beta"
+        "bfw/socketio": "1.0.*@beta"
     },
     "license": "MIT",
     "homepage": "https://github.com/vleij/bfw_socketio.git",
