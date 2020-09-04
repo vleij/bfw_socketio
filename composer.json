@@ -1,5 +1,5 @@
 {
-    "name": "socketio/datapush",
+    "name": "bfw/datapush",
     "description": "一个socketio推送库",
     "type": "library",
     "require": {
@@ -15,7 +15,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "think\\": "./vendor/socketio/src"
+            "think\\": "/socketio/src"
         }
     }
 }
