@@ -11,12 +11,20 @@ class ComposerStaticInit9fb0ba5f43e883ef1ad9f4fc7ae00eb7
         array (
             'bfw\\' => 4,
         ),
+        'D' => 
+        array (
+            'DataPush\\' => 9,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
         'bfw\\' => 
         array (
             0 => '/src',
+        ),
+        'DataPush\\' => 
+        array (
+            0 => '/src/datapush',
         ),
     );
 

@@ -6,7 +6,7 @@
  * Time: 13:44
  */
 
-namespace bfw\base;
+namespace DataPush\base;
 
 
 class ErrCode

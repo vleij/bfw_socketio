@@ -15,7 +15,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "bfw\\": "/src"
+            "bfw\\": "/src",
+            "DataPush\\": "/src/datapush"
         }
     }
 }

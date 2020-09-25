@@ -5,7 +5,7 @@
  * Date: 2020/9/25
  * Time: 13:38
  */
-namespace bfw\base;
+namespace DataPush\base;
 
 class StatusCode
 {

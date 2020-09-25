@@ -5,12 +5,12 @@
  * Date: 2020/9/25
  * Time: 11:18
  */
-namespace bfw;
+namespace DataPush;
 require_once __DIR__ . '../../vendor/autoload.php';
 use think\Config;
 use DataPush\base\StatusCode;
 use DataPush\base\ErrCode;
-class DataPush
+class Push
 {
     private $deploy = [];
     private $url = '127.0.0.1:9191';
@@ -138,7 +138,7 @@ class DataPush
     }
 }
 
-$a = new DataPush();
+$a = new Push();
 //$res = $a->push(['name'=>'leijia']);
 $res = $a->timer_push(1, ['name'=>'leijia']);
 //$res = $a->timer_close(['name'=>'leijia']);

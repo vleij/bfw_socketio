@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'bfw\\' => array('/src'),
+    'DataPush\\' => array('/src/datapush'),
 );
