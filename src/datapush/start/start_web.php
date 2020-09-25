@@ -26,24 +26,50 @@ $io->on('connection', function($socket)use($io){
 });
 
 if(!empty($deploy['http'])){
-    $i=1;
 // 监听一个http端口，通过http协议访问这个端口可以向所有客户端推送数据(url类似http://ip:9191?msg=xxxx)
-    $io->on('workerStart', function()use($io, $deploy,$i) {
-        global $io,$i;
+    $io->on('workerStart', function()use($io, $deploy) {
+        global $io;
         $inner_http_worker = new Worker('http://'.$deploy['http']);
-        $inner_http_worker->onMessage = function(TcpConnection $http_connection, Request $request)use($io){
-            $get = $request->get();
-            if(!isset($get)) {
-                return $http_connection->send('fail, $_GET["msg"] not found');
+        $inner_http_worker->onMessage = function(TcpConnection $http_connection, Request $request)use($io, $deploy){
+ //           $get = $request->get();
+            $post = $request->post();
+//            if(!isset($get)) {
+//                return $http_connection->send('fail, $_GET["msg"] not found');
+//            }
+            $message = $post;
+
+            //请求事件
+            switch ($message['event']){
+                case 'push';
+                    $io->emit('message', $message['data']);
+                break;
+
+                case 'open_timer';
+                    $data = $message['data'];
+                    $timer_id = Timer::add($deploy['push_time'], function() use ($data){
+                        global $io;
+                        $io->emit('new_msg', $data);
+                    });
+                    $_SESSION['timer_id'] = $timer_id;
+                break;
+
+                case 'close_timer';
+                    $timer_id = $_SESSION['timer_id'];
+                    $data = $message['data'];
+                    Timer::add(0.5, function($timer_id) use ($data)
+                    {
+                        global $io;
+                        $io->emit('new_msg', $data);
+                        Timer::del($timer_id);
+                    }, array($timer_id), false);
+                    break;
             }
-            $io->emit('chat message', $get);
+            //请求成功回复
             $http_connection->send('ok');
         };
+        //监听http端口
         $inner_http_worker->listen();
-        Timer::add($deploy['push_time'], function(){
-            global $io,$i;
-            $io->emit('new_msg', "推送".$i++);
-        });
+
     });
 }
 
