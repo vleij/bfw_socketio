@@ -152,12 +152,6 @@ if(!empty($deploy['http'])){
                     $content= @$message['data'];
                     $io->emit('message', $content);
                     break;
-
-                //向所有客户端发送事件，但不包括当前连接。
-                case 'barring_push':
-                    $content= @$message['data'];
-                    $socket->broadcast->emit('event name', $content);
-                break;
                 //定时向所有客户端发送数据
                 case 'open_timer';
                     $data = $message['data'];

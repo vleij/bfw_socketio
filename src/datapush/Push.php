@@ -14,7 +14,7 @@ use Exception;
 class Push
 {
     private $deploy = [];
-    private $url = '127.0.0.1:9191';
+    private static $url = '127.0.0.1:9191';
     function __construct()
     {
 
@@ -31,7 +31,7 @@ class Push
      * @return string|\think\response\Json
      * @author: 雷佳
      */
-    public function push($data, $uid)
+    public static function publish($data, $uid)
     {
         if(empty($data) || empty($uid)){
             throw new Exception("参数缺失");
@@ -42,11 +42,11 @@ class Push
             'data' => json_encode($data),
         ];
         try {
-            $code = self::post_request($this->url, $message);
+            $code = self::post_request(self::$url, $message);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return $this->replace(StatusCode::getStatusCode('0'), $code);
+        return self::replace(StatusCode::getStatusCode('0'), $code);
     }
 
     /** 向属于当前组的客户端发送数据
@@ -58,7 +58,7 @@ class Push
      * @return string|\think\response\Json
      * @author: 雷佳
      */
-    public function group_push($data, $to)
+    public static function group_push($data, $to)
     {
         if(empty($data) || empty($to)){
             throw new Exception("参数缺失");
@@ -69,11 +69,11 @@ class Push
             'data' => json_encode($data),
         ];
         try {
-            $code = self::post_request($this->url, $message);
+            $code = self::post_request(self::$url, $message);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return $this->replace(StatusCode::getStatusCode('0'), $code);
+        return self::replace(StatusCode::getStatusCode('0'), $code);
     }
 
     /**
@@ -101,30 +101,6 @@ class Push
         return $this->replace(StatusCode::getStatusCode('0'), $code);
     }
 
-    /**
-     * Notes: 向所有客户端发送数据但不包括当前客户端
-     * Date: 2020/9/26
-     * Time: 10:40
-     * @param $data
-     * @return string|\think\response\Json
-     * @author: 雷佳
-     */
-    public function barring_push($data)
-    {
-        if(empty($data)){
-            throw new Exception("参数缺失");
-        }
-        $message = [
-            'event'=>'barring_push',
-            'data' => json_encode($data),
-        ];
-        try {
-            $code = self::post_request($this->url, $message);
-        } catch (Exception $e) {
-            return $e->getMessage();
-        }
-        return $this->replace(StatusCode::getStatusCode('0'), $code);
-    }
     /**
      * Notes: 定时推送
      * Date: 2020/9/25
@@ -241,7 +217,7 @@ class Push
      * @return \think\response\Json
      * @author: 雷佳
      */
-    private function replace(int $status, $message = "error", $data = [], $httpStatus = '200')
+    private static function replace(int $status, $message = "error", $data = [], $httpStatus = '200')
     {
         $result = [
             "status" => $status,
