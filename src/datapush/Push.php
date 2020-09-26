@@ -77,7 +77,7 @@ class Push
     }
 
     /**
-     * Notes: 向所用客服端连接发送数据（广播）
+     * Notes: 向所用客户端连接发送数据（广播）
      * Date: 2020/9/26
      * Time: 10:41
      * @param $data

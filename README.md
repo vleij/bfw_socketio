@@ -23,6 +23,7 @@ php start.php start -d 用于守护程序模式
 
 ```
 **客户端**
+
 ```javascript
 <script src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'></script>
 <script>
@@ -34,3 +35,30 @@ socket.on('connect', function(){
 });
 </script>
 ```
+
+#### push.php 核心接口
+
+```
+push($data, $uid) //$data 推送数据 $uid客户端id，向指定客户端发送数据
+```
+
+```
+group_push($data, $to) //$data 推送数据 $uid客户端id，向属于当前组的客户端发送数据
+```
+
+```
+broadcast($data) //向所用客户端连接发送数据（广播）
+```
+
+```
+barring_push($data) //向所有客户端发送数据但不包括当前客户端
+```
+
+```
+timer_push($time, $data) //定时器推送 bool 是否是持久的，如果只想定时执行一次，则传递false 默认是true，即一直定时执行
+```
+
+```
+timer_close($data) //销毁定时推送 （如果 timer_push方法 bool 设置为只执行一次则无需调用此方法,定时器会自动销毁）
+```
+
