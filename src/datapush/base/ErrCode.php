@@ -15,6 +15,7 @@ class ErrCode
     public static $errCode=array(
         '0' => '成功',
         '-1' => '失败',
+        '-2' => '下线',
     );
     public static function getErrText($err) {
         if (isset(self::$errCode[$err])) {

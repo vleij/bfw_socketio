@@ -9,6 +9,7 @@
 define('GLOBAL_START', 1);
 use Workerman\Worker;
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '../../../../autoload.php';
 
 // 加载所有Applications/*/start.php，以便启动所有服务
 foreach(glob(__DIR__.'/datapush/*/start*.php') as $start_file)

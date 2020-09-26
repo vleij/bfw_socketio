@@ -6,10 +6,11 @@
  * Time: 11:18
  */
 namespace DataPush;
+require_once __DIR__ . '../../../../../autoload.php';
 require_once __DIR__ . '../../vendor/autoload.php';
 use think\Config;
 use DataPush\base\StatusCode;
-use DataPush\base\ErrCode;
+use Exception;
 class Push
 {
     private $deploy = [];
@@ -21,29 +22,128 @@ class Push
         $this->deploy = $config->load("./deploy/socketio.php",'default_options_name');
     }
 
+    /**
+     * Notes: 向当前客户端发送数据
+     * Date: 2020/9/26
+     * Time: 10:13
+     * @param $data
+     * @return string|\think\response\Json
+     * @author: 雷佳
+     */
     public function push($data)
     {
         $message = [
             'event'=>'push',
             'data' => json_encode($data),
         ];
-        $res = self::post_request($this->url, $message);
-        return $res;
+        try {
+            $code = self::post_request($this->url, $message);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->replace(StatusCode::getStatusCode('0'), $code);
     }
 
+    /** 向属于当前组的客户端发送数据
+     * Notes:
+     * Date: 2020/9/26
+     * Time: 10:42
+     * @param $data
+     * @param $to 分组
+     * @return string|\think\response\Json
+     * @author: 雷佳
+     */
+    public function group_push($data, $to)
+    {
+        $message = [
+            'event'=>'group_push',
+            'to' => $to,
+            'data' => json_encode($data),
+        ];
+        try {
+            $code = self::post_request($this->url, $message);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->replace(StatusCode::getStatusCode('0'), $code);
+    }
+
+    /**
+     * Notes: 向所用客服端连接发送数据（广播）
+     * Date: 2020/9/26
+     * Time: 10:41
+     * @param $data
+     * @return string|\think\response\Json
+     * @author: 雷佳
+     */
+    public function broadcast($data)
+    {
+        $message = [
+            'event'=>'broadcast',
+            'data' => json_encode($data),
+        ];
+        try {
+            $code = self::post_request($this->url, $message);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->replace(StatusCode::getStatusCode('0'), $code);
+    }
+
+    /**
+     * Notes: 向所有客户端发送数据但不包括当前客户端
+     * Date: 2020/9/26
+     * Time: 10:40
+     * @param $data
+     * @return string|\think\response\Json
+     * @author: 雷佳
+     */
+    public function barring_push($data)
+    {
+        $message = [
+            'event'=>'barring_push',
+            'data' => json_encode($data),
+        ];
+        try {
+            $code = self::post_request($this->url, $message);
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
+        return $this->replace(StatusCode::getStatusCode('0'), $code);
+    }
+    /**
+     * Notes: 定时推送
+     * Date: 2020/9/25
+     * Time: 17:23
+     * bool 是否是持久的，如果只想定时执行一次，则传递false 默认是true，即一直定时执行
+     * @param $time 时间间隔
+     * @param $data
+     * @return \think\response\Json
+     * @throws Exception
+     * @author: 雷佳
+     */
     public function timer_push($time, $data)
     {
         $message = [
             'event'=>'open_timer',
             'push_time'=>$time,
+            'bool' => true,
             'data' => json_encode($data),
         ];
-        self::post_request($this->url, $message);
-        $Statu = new StatusCode();
-        die;
-        $Err = new ErrCode();
-        return $this->replace($Statu->getStatusCode('0'), $Err->getErrText('0'), [], 200);
+        $code = self::post_request($this->url, $message);
+        return $this->replace(StatusCode::getStatusCode('0'), $code);
     }
+
+    /**
+     * Notes:销毁定时推送 （如果 timer_push方法 bool 设置为只执行一次则无需调用此方法,定时器会自动销毁）
+     * Date: 2020/9/25
+     * Time: 17:23
+     * @param $data
+     * @param string $time
+     * @return \think\response\Json
+     * @throws Exception
+     * @author: 雷佳
+     */
     public function timer_close($data, $time='0.5')
     {
         $message = [
@@ -51,8 +151,8 @@ class Push
             'push_time'=>$time,
             'data' => json_encode($data),
         ];
-        $res = self::post_request($this->url, $message);
-        return $res;
+        $code = self::post_request($this->url, $message);
+        return $this->replace(StatusCode::getStatusCode('0'), $code);
     }
 
     /**
@@ -93,7 +193,7 @@ class Push
     private static function post_request($url, $param)
     {
         if (empty($url) || empty($param)) {
-            return false;
+            throw new Exception("参数缺失");
         }
         $postUrl = $url;
         $curlPost = $param;
@@ -109,11 +209,11 @@ class Push
         return $data;
     }
 
-    protected function url_joint($data)
-    {
-        $url = $this->deploy['http'] + '';
-        return $url;
-    }
+//    protected function url_joint($data)
+//    {
+//        $url = $this->deploy['http'] + '';
+//        return $url;
+//    }
 
     /**
      * Notes:通用化Api数据处理
@@ -134,12 +234,19 @@ class Push
             "message" => $message,
             "result" => $data
         ];
-        return json($result, $httpStatus);
+        if (isset($_SERVER["HTTP_X_REQUESTED_WITH"]) && strtolower($_SERVER["HTTP_X_REQUESTED_WITH"] == 'xmlhttprequest'))
+        {
+            // 是ajax请求
+            return json_encode($result, $httpStatus);
+        } else {
+            // 不是ajax请求
+            return $result;
+        }
     }
 }
 
 $a = new Push();
 //$res = $a->push(['name'=>'leijia']);
-$res = $a->timer_push(1, ['name'=>'leijia']);
-//$res = $a->timer_close(['name'=>'leijia']);
+//$res = $a->timer_push(1, ['name'=>'leijia']);
+$res = $a->timer_close(['name'=>'leijia']);
 var_dump($res);
