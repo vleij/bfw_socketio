@@ -228,13 +228,7 @@ class Push
         curl_close($ch);
         return $data;
     }
-
-//    protected function url_joint($data)
-//    {
-//        $url = $this->deploy['http'] + '';
-//        return $url;
-//    }
-
+    
     /**
      * Notes:通用化Api数据处理
      * User: Administrator
