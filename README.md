@@ -1,3 +1,7 @@
+## 介绍
+bfw_socketio 是一个基于开源 异步PHP socket框架 Workerman, 进一步封装 开发者只需简单调用暴露接口即可进行socket数据传输
+
+
 ## 安装
 请使用composer安装bfw_socketio。
 
