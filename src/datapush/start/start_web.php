@@ -161,20 +161,22 @@ if(!empty($deploy['http'])){
                 //定时向所有客户端发送数据
                 case 'open_timer';
                     $data = $message['data'];
-                    $timer_id = Timer::add($deploy['push_time'], function() use ($data){
+                    $timer_id = Timer::add($message['push_time'], function() use ($data){
                         global $io;
                         $io->emit('new_msg', $data);
                     },[], @$message['bool']);
                     $_SESSION['timer_id'] = $timer_id;
                 break;
-
+                //销毁定时器
                 case 'close_timer';
                     $timer_id = $_SESSION['timer_id'];
                     $data = $message['data'];
                     Timer::add(0.1, function($timer_id) use ($data)
                     {
                         global $io;
-                        $io->emit('new_msg', $data);
+                        if(!empty($data)){
+                            $io->emit('new_msg', $data);
+                        }
                         Timer::del($timer_id);
                     }, array($timer_id), false);
                     break;

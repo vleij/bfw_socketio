@@ -161,7 +161,7 @@ class Push
      * @throws Exception
      * @author: 雷佳
      */
-    public function timer_close($data, $time='0.5')
+    public function timer_close($data=[], $time='0.5')
     {
         if(empty($data)){
             throw new Exception("参数缺失");
