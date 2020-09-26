@@ -141,9 +141,9 @@ if(!empty($deploy['http'])){
                     // http接口返回，如果用户离线socket返回fail
 
                     if($to && !isset($toConnectionMap[$to])){
-                        return $http_connection->send('offline');
+                        return $http_connection->send(ErrCode::getErrText(-2));
                     }else{
-                        return $http_connection->send('ok');
+                        return $http_connection->send(ErrCode::getErrText(0));
                     }
                 break;
 
