@@ -129,13 +129,13 @@ if(!empty($deploy['http'])){
                 //向当前客户端发送事件
                 case 'push':
                     $uid = @$message['uid'];
-                    $content= htmlspecialchars(@$message['data']);
+                    $content= @$message['data'];
                     $io->to($uid)->emit('message', $content);
                     break;
 
                 // 有指定uid则向uid所在socket组发送数据
                 case 'group_push':
-                    $content= htmlspecialchars(@$message['data']);
+                    $content= @$message['data'];
                     $to = @$message['to'];
                     $io->to($to)->emit('message', $content);
                     // http接口返回，如果用户离线socket返回fail
@@ -149,13 +149,13 @@ if(!empty($deploy['http'])){
 
                 //向所有客户端发送事件
                 case 'broadcast':
-                    $content= htmlspecialchars(@$message['data']);
+                    $content= @$message['data'];
                     $io->emit('message', $content);
                     break;
 
                 //向所有客户端发送事件，但不包括当前连接。
                 case 'barring_push':
-                    $content= htmlspecialchars(@$message['data']);
+                    $content= @$message['data'];
                     $socket->broadcast->emit('event name', $content);
                 break;
                 //定时向所有客户端发送数据
