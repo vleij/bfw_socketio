@@ -23,17 +23,22 @@ class Push
     }
 
     /**
-     * Notes: 向当前客户端发送数据
+     * Notes: 向指定客户端发送数据
      * Date: 2020/9/26
      * Time: 10:13
+     * @param $uid 客户端uid
      * @param $data
      * @return string|\think\response\Json
      * @author: 雷佳
      */
-    public function push($data)
+    public function push($data, $uid)
     {
+        if(empty($data) || empty($uid)){
+            throw new Exception("参数缺失");
+        }
         $message = [
             'event'=>'push',
+            'uid' => $uid,
             'data' => json_encode($data),
         ];
         try {
@@ -55,6 +60,9 @@ class Push
      */
     public function group_push($data, $to)
     {
+        if(empty($data) || empty($to)){
+            throw new Exception("参数缺失");
+        }
         $message = [
             'event'=>'group_push',
             'to' => $to,
@@ -78,6 +86,9 @@ class Push
      */
     public function broadcast($data)
     {
+        if(empty($data)){
+            throw new Exception("参数缺失");
+        }
         $message = [
             'event'=>'broadcast',
             'data' => json_encode($data),
@@ -100,6 +111,9 @@ class Push
      */
     public function barring_push($data)
     {
+        if(empty($data)){
+            throw new Exception("参数缺失");
+        }
         $message = [
             'event'=>'barring_push',
             'data' => json_encode($data),
@@ -124,6 +138,9 @@ class Push
      */
     public function timer_push($time, $data)
     {
+        if(empty($time) || empty($data)){
+            throw new Exception("参数缺失");
+        }
         $message = [
             'event'=>'open_timer',
             'push_time'=>$time,
@@ -146,6 +163,9 @@ class Push
      */
     public function timer_close($data, $time='0.5')
     {
+        if(empty($data)){
+            throw new Exception("参数缺失");
+        }
         $message = [
             'event'=>'close_timer',
             'push_time'=>$time,
@@ -244,9 +264,3 @@ class Push
         }
     }
 }
-
-$a = new Push();
-//$res = $a->push(['name'=>'leijia']);
-//$res = $a->timer_push(1, ['name'=>'leijia']);
-$res = $a->timer_close(['name'=>'leijia']);
-var_dump($res);
