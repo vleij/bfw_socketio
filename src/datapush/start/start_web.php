@@ -168,10 +168,14 @@ if(!empty($deploy['http'])){
                     },[], @$message['bool']);
                     return $http_connection->send($timer_id);
                     break;
-                //定时向执行类方法
+                //定时执行类方法
                 case 'func_timer';
                     $data = json_decode($message['data']);
+                    $rm = new ReflectionMethod($data[0],$data[1]);
                     $parameter = json_decode($message['parameter']);
+                    if($rm->isStatic() === false){
+                        $data[0] = new $data[0];
+                    }
                     $timer_id = Timer::add($message['push_time'],$data ,$parameter, @$message['bool']);
                     return $http_connection->send($timer_id);
                     break;

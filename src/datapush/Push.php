@@ -139,7 +139,7 @@ class Push
      * @throws Exception
      * @author: 雷佳
      */
-    public function timer_func($time, $data, $parameter, $bool=true)
+    public static function timer_func($time, $data, $parameter, $bool=true)
     {
         if(empty($time) || empty($data)){
             throw new Exception("参数缺失");

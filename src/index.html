@@ -45,6 +45,11 @@
     socket.on('message', function(msg){
         console.log('收到消息：'+msg)
     });
+
+    // 后端推送来在线数据时
+    socket.on('update_online_count', function(online_stat){
+        $('#online_box').html("当前<b>"+online_stat.online_count+"</b>人在线，共打开<b>"+online_stat.online_page+"</b>个页面");
+    });
 </script>
 </body>
 </html>
