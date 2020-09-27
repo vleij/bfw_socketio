@@ -25,21 +25,23 @@
     console.log(uid)
     // 连接服务端
     var socket = io('http://127.0.0.1:9120');
+
     socket.on('connect', function(){
+        //登入事件
         socket.emit('login', uid,'1445590039000');
     });
 
-    // 触发服务端的chat message事件
-    socket.emit('chat message', '这个是消息内容...');
-    // 服务端通过emit('chat message from server', $msg)触发客户端的chat message from server事件
-    socket.on('chat message from server', function(msg){
-        console.log('get message:' + msg + ' from server');
-    });
-    // 后端推送来消息时
-    socket.on('new_msg', function(msg){
+    // 启动定时器时触发事件
+    socket.on('timer_msg', function(msg){
        console.log('收到消息：'+msg)
     });
 
+    // 销毁定时器定时触发事件
+    socket.on('close_timer_msg', function(msg){
+        console.log('收到消息：'+msg)
+    });
+
+    //后端推送消息时
     socket.on('message', function(msg){
         console.log('收到消息：'+msg)
     });

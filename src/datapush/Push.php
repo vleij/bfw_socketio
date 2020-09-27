@@ -84,7 +84,7 @@ class Push
      * @return string|\think\response\Json
      * @author: 雷佳
      */
-    public function broadcast($data)
+    public static function broadcast($data)
     {
         if(empty($data)){
             throw new Exception("参数缺失");
@@ -94,11 +94,11 @@ class Push
             'data' => json_encode($data),
         ];
         try {
-            $code = self::post_request($this->url, $message);
+            $code = self::post_request(self::$url, $message);
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return $this->replace(StatusCode::getStatusCode('0'), $code);
+        return self::replace(StatusCode::getStatusCode('0'), $code);
     }
 
     /**
@@ -108,11 +108,11 @@ class Push
      * bool 是否是持久的，如果只想定时执行一次，则传递false 默认是true，即一直定时执行
      * @param $time 时间间隔
      * @param $data
-     * @return \think\response\Json
+     * @return mixed
      * @throws Exception
      * @author: 雷佳
      */
-    public function timer_push($time, $data)
+    public static function timer_push($time, $data, $bool=true)
     {
         if(empty($time) || empty($data)){
             throw new Exception("参数缺失");
@@ -120,11 +120,41 @@ class Push
         $message = [
             'event'=>'open_timer',
             'push_time'=>$time,
-            'bool' => true,
+            'bool' => $bool,
             'data' => json_encode($data),
         ];
-        $code = self::post_request($this->url, $message);
-        return $this->replace(StatusCode::getStatusCode('0'), $code);
+        $timer_id = self::post_request(self::$url, $message);
+        return $timer_id;
+    }
+
+    /**
+     * Notes:
+     * Date: 2020/9/27
+     * Time: 14:22
+     * @param $time 定时触发时间
+     * @param $data [Auth::class,'function'] Auth 类名  function 方法名
+     * @param $parameter 函数需要的参数
+     * @param bool $bool 是否持续触发
+     * @return mixed
+     * @throws Exception
+     * @author: 雷佳
+     */
+    public function timer_func($time, $data, $parameter, $bool=true)
+    {
+        if(empty($time) || empty($data)){
+            throw new Exception("参数缺失");
+        }
+
+        $message = [
+            'event'=>'func_timer',
+            'push_time'=>$time,
+            'bool' => $bool,
+            'parameter' => json_encode($parameter),
+            'data' => json_encode($data),
+        ];
+
+        $timer_id = self::post_request(self::$url, $message);
+        return $timer_id;
     }
 
     /**
@@ -137,18 +167,19 @@ class Push
      * @throws Exception
      * @author: 雷佳
      */
-    public function timer_close($data=[], $time='0.5')
+    public static function timer_close($timer_id, $data=[], $time='0.1')
     {
-        if(empty($data)){
+        if(empty($timer_id)){
             throw new Exception("参数缺失");
         }
         $message = [
+            'timer_id'=>$timer_id,
             'event'=>'close_timer',
-            'push_time'=>$time,
+            'close_time'=>$time,
             'data' => json_encode($data),
         ];
-        $code = self::post_request($this->url, $message);
-        return $this->replace(StatusCode::getStatusCode('0'), $code);
+        $code = self::post_request(self::$url, $message);
+        return self::replace(StatusCode::getStatusCode('0'), $code);
     }
 
     /**

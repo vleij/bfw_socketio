@@ -13,6 +13,7 @@ use Workerman\Timer;
 use think\Config;
 use DataPush\base\ErrCode;
 
+
 $config = new Config();
 //配置文件
 $deploy = $config->load("./datapush/deploy/socketio.php",'default_options_name');
@@ -57,7 +58,7 @@ $io->on('connection', function($socket)use($io){
     });
 
     // 当客户端发来登录事件时触发
-    $socket->on('login', function ($uid, $to)use($socket){
+    $socket->on('login', function ($uid, $to)use($socket,$io){
         global $uidConnectionMap, $last_online_count, $last_online_page_count, $toConnectionMap;
         // 已经登录过了
 
@@ -83,12 +84,14 @@ $io->on('connection', function($socket)use($io){
         $socket->join($uid);
         $socket->join($to);
         $socket->uid = $uid;
+        $online_count_now = count($uidConnectionMap);
+        $online_page_count_now = array_sum($uidConnectionMap);
         // 更新这个socket对应页面的在线数据
-        //$socket->emit('update_online_count', "当前<b>{$last_online_count}</b>人在线，共打开<b>{$last_online_page_count}</b>个页面");
+        $io->emit('update_online_count', ['online_count'=>$online_count_now,'online_page'=>$online_page_count_now]);
     });
 
     //监听客户端关闭操作（刷新或者网络断开）
-    $socket->on('disconnect', function () use($socket) {
+    $socket->on('disconnect', function () use($socket,$io) {
         if(!isset($socket->uid))
         {
             return;
@@ -101,6 +104,10 @@ $io->on('connection', function($socket)use($io){
         {
             unset($uidConnectionMap[$socket->uid]);
         }
+        $online_count_now = count($uidConnectionMap);
+        $online_page_count_now = array_sum($uidConnectionMap);
+        // 更新这个socket对应页面的在线数据
+        $io->emit('update_online_count', ['online_count'=>$online_count_now,'online_page'=>$online_page_count_now]);
 //        $socket->disconnect();
     });
 });
@@ -145,7 +152,7 @@ if(!empty($deploy['http'])){
                     }else{
                         return $http_connection->send(ErrCode::getErrText(0));
                     }
-                break;
+                    break;
 
                 //向所有客户端发送事件
                 case 'broadcast':
@@ -157,19 +164,27 @@ if(!empty($deploy['http'])){
                     $data = $message['data'];
                     $timer_id = Timer::add($message['push_time'], function() use ($data){
                         global $io;
-                        $io->emit('new_msg', $data);
+                        $io->emit('timer_msg', $data);
                     },[], @$message['bool']);
-                    $_SESSION['timer_id'] = $timer_id;
-                break;
+                    return $http_connection->send($timer_id);
+                    break;
+                //定时向执行类方法
+                case 'func_timer';
+                    $data = json_decode($message['data']);
+                    $parameter = json_decode($message['parameter']);
+                    $timer_id = Timer::add($message['push_time'],$data ,$parameter, @$message['bool']);
+                    return $http_connection->send($timer_id);
+                    break;
                 //销毁定时器
                 case 'close_timer';
-                    $timer_id = $_SESSION['timer_id'];
+                    $timer_id = $message['timer_id'];
                     $data = $message['data'];
-                    Timer::add(0.1, function($timer_id) use ($data)
+                    $close_time = $message['close_time'];
+                    Timer::add($close_time, function($timer_id) use ($data)
                     {
                         global $io;
                         if(!empty($data)){
-                            $io->emit('new_msg', $data);
+                            $io->emit('close_timer_msg', $data);
                         }
                         Timer::del($timer_id);
                     }, array($timer_id), false);
@@ -181,8 +196,11 @@ if(!empty($deploy['http'])){
         //监听http端口
         $inner_http_worker->listen();
 
+
     });
 }
+
+
 
 if(!defined('GLOBAL_START'))
 {
