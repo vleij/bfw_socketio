@@ -98,7 +98,7 @@ php start.php start -d 用于守护程序模式
 #### 1.publish
 
 ```php
-json \DataPush\Push::publish(array $data, int $uid) 
+array \DataPush\Push::publish(array $data, int $uid) 
 ```
 
 ### **参数**
@@ -144,7 +144,7 @@ $res->res();
 #### **2.group_push**
 
 ```php
-json \DataPush\Push::group_push(array $data, int $to) 
+array \DataPush\Push::group_push(array $data, int $to) 
 ```
 
 ### **参数**
@@ -192,7 +192,7 @@ $res->res();
 数据推送给在线的所有客服端连接（广播）
 
 ```php
-json \DataPush\Push::broadcast(array $data) 
+array \DataPush\Push::broadcast(array $data) 
 ```
 
 ### **参数**
@@ -327,7 +327,7 @@ $res->res();
 销毁定时器执行类方法
 
 ```php
-int \DataPush\Push::timer_close(int $timer_id, array $data=[], int $time='0.1') 
+array \DataPush\Push::timer_close(int $timer_id, array $data=[], int $time='0.1') 
 ```
 
 
