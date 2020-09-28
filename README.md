@@ -28,37 +28,311 @@ php start.php start -d 用于守护程序模式
 <script src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'></script>
 <script>
 // 如果服务端不在本机，请把127.0.0.1改成服务端ip
-var socket = io('http://127.0.0.1:9191');
-// 当连接服务端成功时触发connect默认事件
-socket.on('connect', function(){
-    console.log('connect success');
-});
+    var socket = io('http://127.0.0.1:9120');
+
+    socket.on('connect', function(){
+        //登入事件
+        socket.emit('login', uid, to);
+    });
+
+    // 启动定时器时触发事件
+    socket.on('timer_msg', function(msg){
+       console.log('收到消息：'+msg)
+    });
+
+    // 销毁定时器定时触发事件
+    socket.on('close_timer_msg', function(msg){
+        console.log('收到消息：'+msg)
+    });
+
+    //后端推送消息时
+    socket.on('message', function(msg){
+        console.log('收到消息：'+msg)
+    });
 </script>
 ```
 
-#### push.php 核心接口
+### push.php 核心接口
 
-```
-push($data, $uid) //$data 推送数据 $uid客户端id，向指定客户端发送数据
-```
+#### 1.publish
 
-```
-group_push($data, $to) //$data 推送数据 $uid客户端id，向属于当前组的客户端发送数据
+```php
+json \DataPush\Push::publish(array $data, int $uid) 
 ```
 
-```
-broadcast($data) //向所用客户端连接发送数据（广播）
+### **参数**
+
+data
+
+服务端推送给客户端的数据。
+
+uid
+
+客户端id,用于指定客户端推送
+
+### **返回值**
+
+返回一个数组数据
+
+array(3) {
+  ["status"]=>
+  int(0)
+  ["message"]=>
+  string(6) "成功"
+  ["result"]=>
+  array(0) {
+  }
+}
+
+### **示例**
+
+```php
+require_once __DIR__ . '/vendor/autoload.php';
+use DataPush\Push;
+
+class Index{
+    public function res()
+    {
+        $res = Push::publish(['name'=>'leijia'],$uid);
+    }
+}
+$res = new Index();
+$res->res();
 ```
 
-```
-barring_push($data) //向所有客户端发送数据但不包括当前客户端
+#### **2.group_push**
+
+```php
+json \DataPush\Push::group_push(array $data, int $to) 
 ```
 
-```
-timer_push($time, $data) //定时器推送 bool 是否是持久的，如果只想定时执行一次，则传递false 默认是true，即一直定时执行
+### **参数**
+
+data
+
+服务端推送给客户端的数据。
+
+to
+
+客户端分组id,用于指定客户端组别推送
+
+### **返回值**
+
+返回一个数组数据
+
+array(3) {
+  ["status"]=>
+  int(0)
+  ["message"]=>
+  string(6) "成功"
+  ["result"]=>
+  array(0) {
+  }
+}
+
+### **示例**
+
+```php
+require_once __DIR__ . '/vendor/autoload.php';
+use DataPush\Push;
+
+class Index{
+    public function res()
+    {
+        $res = Push::group_push(['name'=>'leijia'],$to);
+    }
+}
+$res = new Index();
+$res->res();
 ```
 
+#### 3.broadcast
+
+数据推送给在线的所有客服端连接（广播）
+
+```php
+json \DataPush\Push::broadcast(array $data) 
 ```
-timer_close($data) //销毁定时推送 （如果 timer_push方法 bool 设置为只执行一次则无需调用此方法,定时器会自动销毁）
+
+### **参数**
+
+data
+
+服务端推送给客户端的数据。
+
+### **返回值**
+
+返回一个数组数据
+
+array(3) {
+  ["status"]=>
+  int(0)
+  ["message"]=>
+  string(6) "成功"
+  ["result"]=>
+  array(0) {
+  }
+}
+
+### **示例**
+
+```
+require_once __DIR__ . '/vendor/autoload.php';
+use DataPush\Push;
+
+class Index{
+    public function res()
+    {
+        $res = Push::broadcast(['name'=>'leijia']);
+    }
+}
+$res = new Index();
+$res->res();
+```
+
+#### 4.timer_push
+
+定时器推送
+
+```php
+int \DataPush\Push::timer_push(int $time, array $data, bool $persistent) 
+```
+
+### **参数**
+
+time
+
+多长时间执行一次，单位秒，支持小数，可以精确到0.001，即精确到毫秒级别。
+
+data
+
+服务端推送给客户端的数据。
+
+persistent 
+
+是否是持久的，如果只想定时执行一次，则传递false（只执行一次的任务在执行完毕后会自动销毁，不必调用Push::timer_close()`）。默认是true，即一直定时执行。
+
+#### 返回值
+
+返回一个整数，代表计时器的timerid，可以通过调用`Push::timer_close($timerid)`销毁这个计时器。
+
+### **示例**
+
+```php
+require_once __DIR__ . '/vendor/autoload.php';
+use DataPush\Push;
+
+class Index{
+    public function res()
+    {
+        $timerid = Push::timer_push(1,name'=>'leijia']);
+    }
+}
+$res = new Index();
+$res->res();
+```
+
+#### 5.timer_func
+
+定时器执行类方法
+
+```php
+int \DataPush\Push::timer_func(int $time, array $data, array $parameter, bool $persistent) 
+```
+
+
+
+### **参数**
+
+time
+
+多长时间执行一次，单位秒，支持小数，可以精确到0.001，即精确到毫秒级别。
+
+data
+
+服务端推送给客户端的数据。
+
+parameter
+
+函数的参数，必须为数组。
+
+persistent 
+
+是否是持久的，如果只想定时执行一次，则传递false（只执行一次的任务在执行完毕后会自动销毁，不必调用Push::timer_close()`）。默认是true，即一直定时执行。
+
+#### 返回值
+
+返回一个整数，代表计时器的timerid，可以通过调用`Push::timer_close($timerid)`销毁这个计时器。
+
+### **实例**
+
+```php
+require_once __DIR__ . '/vendor/autoload.php';
+include __DIR__ .'/vendor/bfw/socketio/src/Cs.php';
+use DataPush\Push;
+
+class Index{
+    public function res()
+    {
+        $timerid = Push::timer_func(1,['Cs','save_log'],['log','555']);
+    }
+}
+$res = new Index();
+$res->res();
+```
+
+#### **6.timer_close**
+
+销毁定时器执行类方法
+
+```php
+int \DataPush\Push::timer_close(int $timer_id, array $data=[], int $time='0.1') 
+```
+
+
+
+### **参数**
+
+timer_id
+
+创建定时器任务id
+
+data
+
+销毁前服务端推送给客户端的数据。（选填）
+
+time（选填）
+
+销毁定时器时间
+
+#### 返回值
+
+返回一个数组数据
+
+array(3) {
+  ["status"]=>
+  int(0)
+  ["message"]=>
+  string(6) "成功"
+  ["result"]=>
+  array(0) {
+  }
+}
+
+### **实例**
+
+```php
+require_once __DIR__ . '/vendor/autoload.php';
+include __DIR__ .'/vendor/bfw/socketio/src/Cs.php';
+use DataPush\Push;
+
+class Index{
+    public function res()
+    {
+        $res = Push::timer_close($timer_id);
+    }
+}
+$res = new Index();
+$res->res();
 ```
 

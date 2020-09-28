@@ -105,14 +105,14 @@ class Push
      * Notes: 定时推送
      * Date: 2020/9/25
      * Time: 17:23
-     * bool 是否是持久的，如果只想定时执行一次，则传递false 默认是true，即一直定时执行
+     * @param bool $persistent 是否是持久的，如果只想定时执行一次，则传递false 默认是true，即一直定时执行
      * @param $time 时间间隔
      * @param $data
      * @return mixed
      * @throws Exception
      * @author: 雷佳
      */
-    public static function timer_push($time, $data, $bool=true)
+    public static function timer_push($time, $data, $persistent=true)
     {
         if(empty($time) || empty($data)){
             throw new Exception("参数缺失");
@@ -120,7 +120,7 @@ class Push
         $message = [
             'event'=>'open_timer',
             'push_time'=>$time,
-            'bool' => $bool,
+            'bool' => $persistent,
             'data' => json_encode($data),
         ];
         $timer_id = self::post_request(self::$url, $message);
@@ -134,12 +134,12 @@ class Push
      * @param $time 定时触发时间
      * @param $data [Auth::class,'function'] Auth 类名  function 方法名
      * @param $parameter 函数需要的参数
-     * @param bool $bool 是否持续触发
+     * @param bool $persistent 是否持续触发
      * @return mixed
      * @throws Exception
      * @author: 雷佳
      */
-    public static function timer_func($time, $data, $parameter, $bool=true)
+    public static function timer_func($time, $data, $parameter, $persistent=true)
     {
         if(empty($time) || empty($data)){
             throw new Exception("参数缺失");
@@ -148,7 +148,7 @@ class Push
         $message = [
             'event'=>'func_timer',
             'push_time'=>$time,
-            'bool' => $bool,
+            'bool' => $persistent,
             'parameter' => json_encode($parameter),
             'data' => json_encode($data),
         ];
