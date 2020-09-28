@@ -40,7 +40,7 @@ class Config
      * 构造方法
      * @access public
      */
-    public function __construct(string $path = null, string $ext = 'socketio.php')
+    public function __construct(string $path = null, string $ext = '.php')
     {
         $this->path = $path ?: '';
         $this->ext  = $ext;
