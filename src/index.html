@@ -12,7 +12,9 @@
 可以通过url：<a id="send_to_one" href="http://127.0.0.1:9191/?event=push&uid=&data=%E6%B6%88%E6%81%AF%E5%86%85%E5%AE%B9" target="_blank"><font style="color:#91BD09">http://<font class="domain"></font>:9191?event=push&uid=<b class="uid"></b>&data=消息内容</font></a>  向当前用户发送消息<br>
 可以通过url：<a id="send_to" href="http://127.0.0.1:9191/?event=group_push&to=1445590039000&data=%E6%B6%88%E6%81%AF%E5%86%85%E5%AE%B9" target="_blank"><font style="color:#91BD09">http://<font class="domain"></font>:9191?event=group_push&to=<b class="to"></b>&data=群消息内容</font></a>  向当前用户组发送消息<br>
 可以通过url：<a id="send_to_all" href="http://127.0.0.1:9191/?event=broadcast&data=%E6%B6%88%E6%81%AF%E5%86%85%E5%AE%B9" target="_blank"  ><font style="color:#91BD09">http://<font class="domain"></font>:9191?event=broadcast&data=广播消息内容</font></a> 向所有在线用户推送消息<br>
-
+<div id="footer">
+    <center id="online_box"></center>
+</div>
 <script>
     // 使用时替换成真实的uid，这里方便演示使用时间戳
     var uid = Date.parse(new Date());
