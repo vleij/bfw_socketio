@@ -60,7 +60,9 @@ php start.php start -d 用于守护程序模式
 **客户端**
 
 ```javascript
-<script src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'></script>
+<script src='https://cdn.bootcss.com/socket.io/2.0.3/socket.io.js'>
+    </script>
+<script src='//cdn.bootcss.com/jquery/1.11.3/jquery.js'></script>
 <script>
 // 如果服务端不在本机，请把127.0.0.1改成服务端ip
     var socket = io('http://127.0.0.1:9120');
@@ -83,6 +85,10 @@ php start.php start -d 用于守护程序模式
     //后端推送消息时
     socket.on('message', function(msg){
         console.log('收到消息：'+msg)
+    });
+    // 后端推送来在线数据时
+    socket.on('update_online_count', function(online_stat){
+        $('#online_box').html("当前<b>"+online_stat.online_count+"</b>人在线，共打开<b>"+online_stat.online_page+"</b>个页面");
     });
 </script>
 ```
