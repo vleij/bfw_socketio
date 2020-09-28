@@ -13,13 +13,20 @@ use DataPush\base\StatusCode;
 use Exception;
 class Push
 {
-    private $deploy = [];
-    private static $url = '127.0.0.1:9191';
+    private static $deploy = [];
+    private static $url;
     function __construct()
     {
-
         $config = new Config();
-        $this->deploy = $config->load("./deploy/socketio.php",'default_options_name');
+        self::$deploy = $config->load(__DIR__."/deploy/socketio");
+        if(empty(self::$deploy)){
+            throw new Exception("socketio配置参数错误");
+        }
+        if(!empty(self::$deploy['client_link'])){
+            self::$url =  self::$deploy['client_link'];
+        }else{
+            throw new Exception("client_link 客户端配置参数错误");
+        }
     }
 
     /**

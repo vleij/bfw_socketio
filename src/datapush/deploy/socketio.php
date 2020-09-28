@@ -20,4 +20,7 @@ return [
         //域名验证
         'verify_peer' => false,
     ],
+    //客户端连接url
+    'client_link'=>'127.0.0.1:9191',
+
 ];
