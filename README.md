@@ -134,7 +134,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $res = Push::publish(['name'=>'leijia'],$uid);
+        $push = new Push();
+        $res = $push::publish(['name'=>'leijia'],$uid);
     }
 }
 $res = new Index();
@@ -180,7 +181,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $res = Push::group_push(['name'=>'leijia'],$to);
+        $push = new Push();
+        $res = $push::group_push(['name'=>'leijia'],$to);
     }
 }
 $res = new Index();
@@ -224,7 +226,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $res = Push::broadcast(['name'=>'leijia']);
+        $push = new Push();
+        $res = $push::broadcast(['name'=>'leijia']);
     }
 }
 $res = new Index();
@@ -266,7 +269,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $timerid = Push::timer_push(1,name'=>'leijia']);
+        $push = new Push();
+        $timerid = $push::timer_push(1,name'=>'leijia']);
     }
 }
 $res = new Index();
@@ -315,7 +319,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $timerid = Push::timer_func(1,['Cs','save_log'],['log','555']);
+        $push = new Push();
+        $timerid = $push::timer_func(1,['Cs','save_log'],['log','555']);
     }
 }
 $res = new Index();
@@ -370,7 +375,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $res = Push::timer_close($timer_id);
+        $push = new Push();
+        $res = $push::timer_close($timer_id);
     }
 }
 $res = new Index();
