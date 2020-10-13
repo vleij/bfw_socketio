@@ -10,7 +10,7 @@
 // +----------------------------------------------------------------------
 declare (strict_types = 1);
 
-namespace base;
+namespace DataPush\base;
 
 /**
  * 配置管理类
