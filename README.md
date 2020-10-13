@@ -98,7 +98,7 @@ php start.php start -d 用于守护程序模式
 #### 1.publish
 
 ```php
-json \DataPush\Push::publish(array $data, int $uid) 
+array \DataPush\Push::publish(array $data, int $uid) 
 ```
 
 ### **参数**
@@ -134,7 +134,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $res = Push::publish(['name'=>'leijia'],$uid);
+        $push = new Push();
+        $res = $push::publish(['name'=>'leijia'],$uid);
     }
 }
 $res = new Index();
@@ -144,7 +145,7 @@ $res->res();
 #### **2.group_push**
 
 ```php
-json \DataPush\Push::group_push(array $data, int $to) 
+array \DataPush\Push::group_push(array $data, int $to) 
 ```
 
 ### **参数**
@@ -180,7 +181,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $res = Push::group_push(['name'=>'leijia'],$to);
+        $push = new Push();
+        $res = $push::group_push(['name'=>'leijia'],$to);
     }
 }
 $res = new Index();
@@ -192,7 +194,7 @@ $res->res();
 数据推送给在线的所有客服端连接（广播）
 
 ```php
-json \DataPush\Push::broadcast(array $data) 
+array \DataPush\Push::broadcast(array $data) 
 ```
 
 ### **参数**
@@ -224,7 +226,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $res = Push::broadcast(['name'=>'leijia']);
+        $push = new Push();
+        $res = $push::broadcast(['name'=>'leijia']);
     }
 }
 $res = new Index();
@@ -266,7 +269,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $timerid = Push::timer_push(1,name'=>'leijia']);
+        $push = new Push();
+        $timerid = $push::timer_push(1,name'=>'leijia']);
     }
 }
 $res = new Index();
@@ -315,7 +319,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $timerid = Push::timer_func(1,['Cs','save_log'],['log','555']);
+        $push = new Push();
+        $timerid = $push::timer_func(1,['Cs','save_log'],['log','555']);
     }
 }
 $res = new Index();
@@ -327,7 +332,7 @@ $res->res();
 销毁定时器执行类方法
 
 ```php
-int \DataPush\Push::timer_close(int $timer_id, array $data=[], int $time='0.1') 
+array \DataPush\Push::timer_close(int $timer_id, array $data=[], int $time='0.1') 
 ```
 
 
@@ -370,7 +375,8 @@ use DataPush\Push;
 class Index{
     public function res()
     {
-        $res = Push::timer_close($timer_id);
+        $push = new Push();
+        $res = $push::timer_close($timer_id);
     }
 }
 $res = new Index();
