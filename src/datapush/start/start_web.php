@@ -10,7 +10,7 @@ use PHPSocketIO\SocketIO;
 use Workerman\Protocols\Http\Request;
 use Workerman\Connection\TcpConnection;
 use Workerman\Timer;
-use think\Config;
+use DataPush\base\Config;
 use DataPush\base\ErrCode;
 
 

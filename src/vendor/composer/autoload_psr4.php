@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'think\\' => array($vendorDir . '/think'),
     'Workerman\\' => array($vendorDir . '/workerman/workerman'),
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'PHPSocketIO\\' => array($vendorDir . '/workerman/phpsocket.io/src'),
