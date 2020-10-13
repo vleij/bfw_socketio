@@ -53,7 +53,7 @@ class Push
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return self::replace(StatusCode::getStatusCode('0'), $code);
+        return self::replace(StatusCode::getStatusCode('success'), $code);
     }
 
     /** 向属于当前组的客户端发送数据
@@ -80,7 +80,7 @@ class Push
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return self::replace(StatusCode::getStatusCode('0'), $code);
+        return self::replace(StatusCode::getStatusCode('success'), $code);
     }
 
     /**
@@ -105,7 +105,7 @@ class Push
         } catch (Exception $e) {
             return $e->getMessage();
         }
-        return self::replace(StatusCode::getStatusCode('0'), $code);
+        return self::replace(StatusCode::getStatusCode('success'), $code);
     }
 
     /**
@@ -186,7 +186,7 @@ class Push
             'data' => json_encode($data),
         ];
         $code = self::post_request(self::$url, $message);
-        return self::replace(StatusCode::getStatusCode('0'), $code);
+        return self::replace(StatusCode::getStatusCode('success'), $code);
     }
 
     /**
